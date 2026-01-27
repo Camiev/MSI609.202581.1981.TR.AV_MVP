@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { initializeFirebase } from './config/firebase';
-import { itemsRouter } from './routes/items';
+import { vouchersRouter } from './routes/items';
 
 dotenv.config();
 
@@ -22,7 +22,7 @@ app.get('/api/health', (req: Request, res: Response) => {
   res.json({ status: 'ok', message: 'Backend is running' });
 });
 
-app.use('/api/items', itemsRouter);
+app.use('/api/vouchers', vouchersRouter);
 
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: Function) => {

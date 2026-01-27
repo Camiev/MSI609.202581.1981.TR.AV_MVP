@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Item } from '../components/ItemForm'
+import { Voucher } from '../components/VoucherForm'
 
 // Usar proxy de Vite en desarrollo, o URL completa en producción
 const isDev = import.meta.env.DEV
@@ -13,32 +13,28 @@ const apiClient = axios.create({
 })
 
 export const api = {
-  async getItems(): Promise<Item[]> {
-    console.log('Getting items from API')
-    const response = await apiClient.get<Item[]>('/items')
-    console.log('Items received from API:', response.data)
+  async getVouchers(): Promise<Voucher[]> {
+    const response = await apiClient.get<Voucher[]>('/vouchers')
     return response.data
   },
 
-  async getItem(id: string): Promise<Item> {
-    const response = await apiClient.get<Item>(`/items/${id}`)
+  async getVoucher(id: string): Promise<Voucher> {
+    const response = await apiClient.get<Voucher>(`/vouchers/${id}`)
     return response.data
   },
 
-  async createItem(item: Omit<Item, 'id'>): Promise<Item> {
-    console.log('Creating item in API:', item)
-    const response = await apiClient.post<Item>('/items', item)
-    console.log('Response from API:', response.data)
+  async createVoucher(voucher: Omit<Voucher, 'id'>): Promise<Voucher> {
+    const response = await apiClient.post<Voucher>('/vouchers', voucher)
     return response.data
   },
 
-  async updateItem(id: string, item: Partial<Item>): Promise<Item> {
-    const response = await apiClient.put<Item>(`/items/${id}`, item)
+  async updateVoucher(id: string, voucher: Partial<Voucher>): Promise<Voucher> {
+    const response = await apiClient.put<Voucher>(`/vouchers/${id}`, voucher)
     return response.data
   },
 
-  async deleteItem(id: string): Promise<void> {
-    await apiClient.delete(`/items/${id}`)
+  async deleteVoucher(id: string): Promise<void> {
+    await apiClient.delete(`/vouchers/${id}`)
   },
 }
 

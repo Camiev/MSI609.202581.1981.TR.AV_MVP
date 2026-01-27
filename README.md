@@ -1,6 +1,6 @@
-# MVP Full-Stack - TypeScript + React + Express + Firebase
+# 🎫 Generador de Tarjetas - MVP MIT Design Full Stack
 
-MVP web funcional con TypeScript, React en el frontend, Node.js + Express + Firebase Functions en el backend, y Firestore como base de datos.
+Aplicación web para generar tarjetas simbólicas tipo "Vale por..." con TypeScript, React en el frontend, Node.js + Express + Firebase Functions en el backend, y Firestore como base de datos.
 
 ## 🚀 Stack Tecnológico
 
@@ -189,11 +189,11 @@ Los datos del emulador se almacenan en memoria y se resetean al reiniciar.
 
 ### Backend (Express)
 - `GET /api/health` - Health check
-- `GET /api/items` - Obtener todos los items
-- `POST /api/items` - Crear un nuevo item
-- `GET /api/items/:id` - Obtener un item por ID
-- `PUT /api/items/:id` - Actualizar un item
-- `DELETE /api/items/:id` - Eliminar un item
+- `GET /api/vouchers` - Obtener todas las tarjetas
+- `POST /api/vouchers` - Crear una nueva tarjeta
+- `GET /api/vouchers/:id` - Obtener una tarjeta por ID
+- `PUT /api/vouchers/:id` - Actualizar una tarjeta
+- `DELETE /api/vouchers/:id` - Eliminar una tarjeta
 
 ### Firebase Functions
 - Las funciones están disponibles en `/api/functions/*`

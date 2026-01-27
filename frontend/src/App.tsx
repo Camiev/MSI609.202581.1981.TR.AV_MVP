@@ -1,66 +1,64 @@
 import { useState, useEffect } from 'react'
 import './App.css'
-import { Item, ItemForm } from './components/ItemForm'
-import { ItemList } from './components/ItemList'
+import { Voucher, VoucherForm } from './components/VoucherForm'
+import { VoucherList } from './components/VoucherList'
 import { api } from './services/api'
 
 function App() {
-  const [items, setItems] = useState<Item[]>([])
+  const [vouchers, setVouchers] = useState<Voucher[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const fetchItems = async () => {
+  const fetchVouchers = async () => {
     try {
       setLoading(true)
       setError(null)
-      const data = await api.getItems()
-      setItems(data)
+      const data = await api.getVouchers()
+      setVouchers(data)
     } catch (err: any) {
-      setError(err.message || 'Error al cargar items')
-      console.error('Error fetching items:', err)
+      setError(err.message || 'Error al cargar tarjetas')
+      console.error('Error fetching vouchers:', err)
     } finally {
       setLoading(false)
     }
   }
 
   useEffect(() => {
-    fetchItems()
+    fetchVouchers()
   }, [])
 
-  const handleAddItem = async (item: Omit<Item, 'id'>) => {
+  const handleAddVoucher = async (voucher: Omit<Voucher, 'id'>) => {
     try {
-      console.log('Creating item:', item)
-      const newItem = await api.createItem(item)
-      console.log('New item created:', newItem)
-      setItems([...items, newItem])
+      const newVoucher = await api.createVoucher(voucher)
+      setVouchers([...vouchers, newVoucher])
     } catch (err: any) {
-      setError(err.message || 'Error al crear item')
+      setError(err.message || 'Error al crear tarjeta')
     }
   }
 
-  const handleUpdateItem = async (id: string, item: Partial<Item>) => {
+  const handleUpdateVoucher = async (id: string, voucher: Partial<Voucher>) => {
     try {
-      const updatedItem = await api.updateItem(id, item)
-      setItems(items.map(i => i.id === id ? updatedItem : i))
+      const updatedVoucher = await api.updateVoucher(id, voucher)
+      setVouchers(vouchers.map(v => v.id === id ? updatedVoucher : v))
     } catch (err: any) {
-      setError(err.message || 'Error al actualizar item')
+      setError(err.message || 'Error al actualizar tarjeta')
     }
   }
 
-  const handleDeleteItem = async (id: string) => {
+  const handleDeleteVoucher = async (id: string) => {
     try {
-      await api.deleteItem(id)
-      setItems(items.filter(i => i.id !== id))
+      await api.deleteVoucher(id)
+      setVouchers(vouchers.filter(v => v.id !== id))
     } catch (err: any) {
-      setError(err.message || 'Error al eliminar item')
+      setError(err.message || 'Error al eliminar tarjeta')
     }
   }
 
   return (
     <div className="app">
       <header className="app-header">
-        <h1>🚀 MVP Full-Stack</h1>
-        <p>React + TypeScript + Express + Firebase</p>
+        <h1>🎫 Generador de Tarjetas</h1>
+        <p>Crea tarjetas simbólicas tipo "Vale por..."</p>
       </header>
 
       {error && (
@@ -72,14 +70,14 @@ function App() {
 
       <div className="app-content">
         <div className="form-section">
-          <h2>Agregar Nuevo Item</h2>
-          <ItemForm onSubmit={handleAddItem} />
+          <h2>Crear Nueva Tarjeta</h2>
+          <VoucherForm onSubmit={handleAddVoucher} />
         </div>
 
         <div className="list-section">
           <div className="list-header">
-            <h2>Items ({items.length})</h2>
-            <button onClick={fetchItems} disabled={loading}>
+            <h2>Mis Tarjetas ({vouchers.length})</h2>
+            <button onClick={fetchVouchers} disabled={loading}>
               {loading ? '🔄' : '↻'} Actualizar
             </button>
           </div>
@@ -87,10 +85,10 @@ function App() {
           {loading ? (
             <div className="loading">Cargando...</div>
           ) : (
-            <ItemList
-              items={items}
-              onUpdate={handleUpdateItem}
-              onDelete={handleDeleteItem}
+            <VoucherList
+              vouchers={vouchers}
+              onUpdate={handleUpdateVoucher}
+              onDelete={handleDeleteVoucher}
             />
           )}
         </div>

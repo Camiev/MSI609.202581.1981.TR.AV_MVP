@@ -15,11 +15,8 @@ export const helloWorld = functions.https.onRequest((request, response) => {
 
 // Función para obtener estadísticas
 export const getStats = functions.https.onRequest(async (request, response) => {
-  console.log('Getting stats from Firebase Functions')
   try {
-    console.log('Getting items from Firestore')
     const itemsSnapshot = await db.collection('items').get();
-    console.log('Items snapshot:', itemsSnapshot.docs.map(doc => doc.data()))
     const stats = {
       totalItems: itemsSnapshot.size,
       timestamp: new Date().toISOString()

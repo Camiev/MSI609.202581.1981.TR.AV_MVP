@@ -11,7 +11,6 @@ export const initializeFirebase = (): void => {
 
   try {
     const projectId = process.env.FIREBASE_PROJECT_ID;
-    console.log('Project ID:', projectId)
     
     if (!projectId) {
       throw new Error('FIREBASE_PROJECT_ID environment variable is required');
@@ -21,12 +20,8 @@ export const initializeFirebase = (): void => {
     const credentialsPath = process.env.GOOGLE_APPLICATION_CREDENTIALS || 
                             path.join(process.cwd(), 'firebase-service-account.json');
 
-    console.log('Credentials path:', credentialsPath)
-    
-    console.log('Use emulator process.env.USE_FIREBASE_EMULATOR:', process.env.USE_FIREBASE_EMULATOR)
     const useEmulator = process.env.USE_FIREBASE_EMULATOR === 'true';
 
-    console.log('Use emulator:', useEmulator)
     if (useEmulator) {
       // Configurar emulador de Firestore si está disponible
       const emulatorHost = process.env.FIRESTORE_EMULATOR_HOST || 'localhost:8080';
@@ -46,8 +41,6 @@ export const initializeFirebase = (): void => {
         const serviceAccount = require(credentialsPath);
         
         if (!admin.apps.length) {
-          console.log('Initializing Firebase Admin with credentials')
-          console.log('Service account:', serviceAccount)
           admin.initializeApp({
             credential: admin.credential.cert(serviceAccount),
             projectId: projectId,

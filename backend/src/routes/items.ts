@@ -3,33 +3,30 @@ import { getFirestore } from '../config/firebase';
 
 const router = Router();
 const db = getFirestore();
-const COLLECTION_NAME = 'items';
+const COLLECTION_NAME = 'vouchers';
 
-// GET /api/items - Obtener todos los items
+// GET /api/vouchers - Obtener todas las tarjetas
 router.get('/', async (req: Request, res: Response) => {
   try {
-    console.log('Getting items from Firestore')
     const snapshot = await db.collection(COLLECTION_NAME).get();
-    console.log('Items snapshot:', snapshot.docs.map(doc => doc.data()))
-    const items = snapshot.docs.map(doc => ({
+    const vouchers = snapshot.docs.map((doc: any) => ({
       id: doc.id,
       ...doc.data()
     }));
-    console.log('Items:', items)
-    res.json(items);
+    res.json(vouchers);
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
 });
 
-// GET /api/items/:id - Obtener un item por ID
+// GET /api/vouchers/:id - Obtener una tarjeta por ID
 router.get('/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const doc = await db.collection(COLLECTION_NAME).doc(id).get();
     
     if (!doc.exists) {
-      return res.status(404).json({ error: 'Item not found' });
+      return res.status(404).json({ error: 'Voucher not found' });
     }
     
     res.json({ id: doc.id, ...doc.data() });
@@ -38,41 +35,45 @@ router.get('/:id', async (req: Request, res: Response) => {
   }
 });
 
-// POST /api/items - Crear un nuevo item
+// POST /api/vouchers - Crear una nueva tarjeta
 router.post('/', async (req: Request, res: Response) => {
   try {
-    const { title, description } = req.body;
+    const { valePor, para, de, design } = req.body;
     
-    if (!title) {
-      return res.status(400).json({ error: 'Title is required' });
+    if (!valePor) {
+      return res.status(400).json({ error: 'Vale por es requerido' });
     }
     
-    const newItem = {
-      title,
-      description: description || '',
+    const newVoucher = {
+      valePor: valePor.trim(),
+      para: para?.trim() || '',
+      de: de?.trim() || '',
+      design: design || 'classic',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
     
-    const docRef = await db.collection(COLLECTION_NAME).add(newItem);
-    res.status(201).json({ id: docRef.id, ...newItem });
+    const docRef = await db.collection(COLLECTION_NAME).add(newVoucher);
+    res.status(201).json({ id: docRef.id, ...newVoucher });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
 });
 
-// PUT /api/items/:id - Actualizar un item
+// PUT /api/vouchers/:id - Actualizar una tarjeta
 router.put('/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { title, description } = req.body;
+    const { valePor, para, de, design } = req.body;
     
     const updateData: any = {
       updatedAt: new Date().toISOString()
     };
     
-    if (title !== undefined) updateData.title = title;
-    if (description !== undefined) updateData.description = description;
+    if (valePor !== undefined) updateData.valePor = valePor.trim();
+    if (para !== undefined) updateData.para = para?.trim() || '';
+    if (de !== undefined) updateData.de = de?.trim() || '';
+    if (design !== undefined) updateData.design = design;
     
     await db.collection(COLLECTION_NAME).doc(id).update(updateData);
     
@@ -80,23 +81,23 @@ router.put('/:id', async (req: Request, res: Response) => {
     res.json({ id: doc.id, ...doc.data() });
   } catch (error: any) {
     if (error.code === 5) {
-      return res.status(404).json({ error: 'Item not found' });
+      return res.status(404).json({ error: 'Voucher not found' });
     }
     res.status(500).json({ error: error.message });
   }
 });
 
-// DELETE /api/items/:id - Eliminar un item
+// DELETE /api/vouchers/:id - Eliminar una tarjeta
 router.delete('/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     await db.collection(COLLECTION_NAME).doc(id).delete();
-    res.json({ message: 'Item deleted successfully' });
+    res.json({ message: 'Voucher deleted successfully' });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
 });
 
-export { router as itemsRouter };
+export { router as vouchersRouter };
 
 
