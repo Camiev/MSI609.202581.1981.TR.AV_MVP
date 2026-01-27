@@ -113,7 +113,7 @@ mvp/
 
 El proyecto puede usar **Firebase real** (producción) o **Firebase Emulator** (desarrollo local).
 
-> 📖 **Guía detallada**: Ver [FIREBASE_SETUP.md](./FIREBASE_SETUP.md) para instrucciones paso a paso.
+> 📖 **Guía detallada**: Ver [FIREBASE_SETUP.md](./docs/FIREBASE_SETUP.md) para instrucciones paso a paso.
 
 ### Opción 1: Firebase Real (Producción) ⭐
 
@@ -272,6 +272,26 @@ REACT_APP_FIREBASE_PROJECT_ID=tu-project-id
 ### Seguridad ⚠️
 
 **IMPORTANTE**: Nunca subas `firebase-service-account.json` al repositorio. Este archivo ya está en `.gitignore`.
+
+## 👥 Autores
+
+- **Camila Eyzaguirre**
+- **Héctor Salinas** 
+
+## 📚 Fuentes y Referencias
+
+### Documentación Oficial
+- [React Documentation](https://react.dev/)
+- [TypeScript Documentation](https://www.typescriptlang.org/docs/)
+- [Express.js Guide](https://expressjs.com/en/guide/routing.html)
+- [Firebase Documentation](https://firebase.google.com/docs)
+- [Firestore Documentation](https://firebase.google.com/docs/firestore)
+- [Vite Documentation](https://vitejs.dev/guide/)
+
+### Herramientas y Librerías
+- [Node.js](https://nodejs.org/)
+- [Docker Documentation](https://docs.docker.com/)
+- [Docker Compose](https://docs.docker.com/compose/)
 
 ## 📄 Licencia
 

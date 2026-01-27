@@ -38,7 +38,5 @@ ui-debug.log
 *.swo
 *~
 
-# Docker
-.dockerignore
 
 
