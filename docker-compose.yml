@@ -1,0 +1,83 @@
+version: '3.8'
+
+services:
+  # Firebase Emulator Suite (solo si USE_FIREBASE_EMULATOR=true)
+  firebase-emulator:
+    image: node:18-alpine
+    container_name: firebase-emulator
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+      - firebase-cache:/root/.cache
+    ports:
+      - "4000:4000"  # Firebase Emulator UI
+      - "8080:8080"  # Firestore Emulator
+      - "5001:5001"  # Functions Emulator
+      - "9099:9099"  # Auth Emulator
+    command: sh -c "npm install -g firebase-tools && firebase emulators:start --only firestore,functions --project ${FIREBASE_PROJECT_ID:-mvp-dev}"
+    environment:
+      - FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID:-mvp-dev}
+      - GCLOUD_PROJECT=${FIREBASE_PROJECT_ID:-mvp-dev}
+    networks:
+      - mvp-network
+    profiles:
+      - emulator
+
+  # Backend - Express + Firebase Functions
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: mvp-backend
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID}
+      - USE_FIREBASE_EMULATOR=${USE_FIREBASE_EMULATOR:-false}
+      - FIRESTORE_EMULATOR_HOST=${FIRESTORE_EMULATOR_HOST:-}
+      - FIREBASE_AUTH_EMULATOR_HOST=${FIREBASE_AUTH_EMULATOR_HOST:-}
+      - GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS:-/app/firebase-service-account.json}
+    depends_on:
+      firebase-emulator:
+        condition: service_started
+        required: false
+    command: npm run dev
+    networks:
+      - mvp-network
+
+  # Frontend - React
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: mvp-frontend
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://backend:3001
+      - VITE_API_URL=http://backend:3001
+      - REACT_APP_FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID}
+      - REACT_APP_FIREBASE_EMULATOR_HOST=${REACT_APP_FIREBASE_EMULATOR_HOST:-}
+    depends_on:
+      - backend
+    command: npm start
+    networks:
+      - mvp-network
+
+networks:
+  mvp-network:
+    driver: bridge
+
+volumes:
+  firebase-cache:
+

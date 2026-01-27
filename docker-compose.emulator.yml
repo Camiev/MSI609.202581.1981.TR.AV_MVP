@@ -1,0 +1,21 @@
+# Archivo de configuración alternativa para usar con emulador
+# Uso: docker compose -f docker-compose.yml -f docker-compose.emulator.yml up
+
+version: '3.8'
+
+services:
+  firebase-emulator:
+    profiles: []
+
+  backend:
+    environment:
+      - FIRESTORE_EMULATOR_HOST=firebase-emulator:8080
+      - FIREBASE_AUTH_EMULATOR_HOST=firebase-emulator:9099
+    depends_on:
+      firebase-emulator:
+        condition: service_started
+
+  frontend:
+    environment:
+      - REACT_APP_FIREBASE_EMULATOR_HOST=firebase-emulator:8080
+
