@@ -22,6 +22,12 @@ app.get('/api/health', (req: Request, res: Response) => {
   res.json({ status: 'ok', message: 'Backend is running' });
 });
 
+const logger = (req: Request, res: Response, next: Function) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+};
+
+app.use(logger);
 app.use('/api/vouchers', vouchersRouter);
 
 // Error handling middleware
